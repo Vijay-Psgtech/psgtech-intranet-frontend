@@ -14,7 +14,7 @@ const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <header className="w-full border-b border-white/10 bg-gradient-to-r from-[#0d5ad6] via-[#0f66e8] to-[#0b4ab0] shadow-[0_12px_30px_rgba(13,89,214,0.25)]">
+    <header className="w-full border-b border-white/10 bg-gradient-to-r from-[#0d5ad6] via-[#0f66e8] to-[#0b4ab0] shadow-[0_12px_30px_rgba(13,89,214,0.25)] fixed top-0 z-50 backdrop-blur-xl">
       <nav className="mx-auto flex max-w-[1800px] items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8 xl:px-10">
         <a href="/" className="flex min-w-0 items-center gap-3 text-white transition-opacity hover:opacity-95">
           <div className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-xl border border-white/20 bg-white/10 shadow-lg backdrop-blur-sm sm:h-14 sm:w-14">
