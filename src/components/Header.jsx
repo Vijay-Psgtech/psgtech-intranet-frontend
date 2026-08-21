@@ -1,8 +1,20 @@
-import { Bell, ChevronRight, Menu, X } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
+import { useState } from 'react';
+
+const navItems = [
+  { label: 'Home', href: '/' },
+  { label: 'Virus Definition Update', href: '/virus-definition-update' },
+  { label: 'Essential Utility Softwares', href: '/resources' },
+  { label: 'CBCS', href: '/cbcs' },
+  { label: 'Login', href: '/login' },
+];
 
 function Header({ sidebarOpen, onToggleSidebar }) {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
   return (
-    <header className="sticky top-0 z-20 flex h-20 items-center justify-between border-b border-slate-200 bg-white/90 px-[4.5vw] backdrop-blur-md max-sm:h-16 max-sm:px-4">
+    <header className="sticky top-0 z-20 border-b border-slate-200 bg-white/90 backdrop-blur-md">
+      <div className="flex h-20 items-center justify-between px-[4.5vw] max-sm:h-16 max-sm:px-4">
       <a
         className="flex items-center gap-3 text-slate-900"
         href="/"
@@ -11,7 +23,7 @@ function Header({ sidebarOpen, onToggleSidebar }) {
         <span className="grid h-10 w-10 place-items-center rounded-xl bg-teal-700 text-xs font-bold tracking-wider text-white">
           PSG
         </span>
-        <span>
+        <span className="max-sm:hidden">
           <strong className="block text-base font-bold">PSG Document Hub</strong>
           <small className="block text-[11px] text-slate-500">
             College of Technology
@@ -19,35 +31,56 @@ function Header({ sidebarOpen, onToggleSidebar }) {
         </span>
       </a>
 
-      <div className="flex items-center gap-5 max-sm:gap-1">
+      <nav className="hidden items-center gap-1 lg:flex" aria-label="Main navigation">
+        {navItems.map((item) => (
+          <a
+            key={item.href}
+            href={item.href}
+            className="rounded-full px-3 py-2 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-100 hover:text-slate-900 xl:px-4"
+          >
+            {item.label}
+          </a>
+        ))}
+      </nav>
+
+      <div className="flex items-center gap-1 lg:hidden">
         <button
-          className="relative border-0 bg-transparent p-2 text-slate-500 max-sm:hidden"
-          aria-label="Notifications"
-          title="Notifications"
+          className="border-0 bg-transparent p-2 text-slate-500"
+          aria-label="Toggle navigation menu"
+          aria-expanded={mobileMenuOpen}
+          onClick={() => setMobileMenuOpen((open) => !open)}
         >
-          <Bell size={19} />
-          <i className="absolute right-1 top-1 h-1.5 w-1.5 rounded-full bg-orange-500 ring-2 ring-white" />
+          {mobileMenuOpen ? <X size={21} /> : <Menu size={21} />}
         </button>
 
-        <div className="flex items-center gap-2">
-          <span className="grid h-9 w-9 place-items-center rounded-full bg-teal-50 text-xs font-bold text-teal-700">
-            AS
-          </span>
-          <span className="max-sm:hidden">
-            <strong className="block text-sm">Arun S</strong>
-            <small className="block text-[11px] text-slate-500">Staff account</small>
-          </span>
-          <ChevronRight className="max-sm:hidden" size={16} />
-        </div>
-
         <button
-          className="hidden border-0 bg-transparent p-2 text-slate-500 max-sm:block"
+          className="border-0 bg-transparent p-2 text-slate-500 max-sm:block sm:hidden"
           aria-label="Toggle sidebar"
+          aria-expanded={sidebarOpen}
           onClick={onToggleSidebar}
         >
           {sidebarOpen ? <X size={21} /> : <Menu size={21} />}
         </button>
       </div>
+      </div>
+
+      {mobileMenuOpen && (
+        <nav
+          className="border-t border-slate-100 px-4 py-3 lg:hidden"
+          aria-label="Mobile navigation"
+        >
+          {navItems.map((item) => (
+            <a
+              key={item.href}
+              href={item.href}
+              className="block rounded-lg px-3 py-2.5 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-100 hover:text-slate-900"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              {item.label}
+            </a>
+          ))}
+        </nav>
+      )}
     </header>
   );
 }
