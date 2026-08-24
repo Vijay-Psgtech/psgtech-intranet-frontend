@@ -1,15 +1,16 @@
-import axios from 'axios';
+import axios from "axios";
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 
 const api = axios.create({
   baseURL: API_BASE_URL,
   headers: {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
   },
   timeout: 10000, // Set a timeout of 10 seconds
   withCredentials: true, // Include credentials for cross-origin requests
-}); 
+});
 
 // RESPONSE INTERCEPTOR
 api.interceptors.response.use(
@@ -34,5 +35,14 @@ api.interceptors.response.use(
     return Promise.reject(error);
   },
 );
+
+// -------------- API BASE ----------------------- //
+export const API_BASE = import.meta.env.VITE_API_URL.replace("/api", "");
+
+// ----------- Auth API ------------------ //
+export const authAPI = {
+  login: (data) => api.post("/auth/login", data),
+  getProfile: () => api.get("/auth/me"),
+};
 
 export default api;
