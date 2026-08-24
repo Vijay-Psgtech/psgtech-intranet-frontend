@@ -1,11 +1,12 @@
 import { useState } from 'react';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import Dashboard from './components/Dashboard';
 import Footer from './components/Footer';
 import Header from './components/Header';
+import Login from './pages/login';
 
-function App() {
+function DashboardLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-
   const closeSidebar = () => setSidebarOpen(false);
 
   return (
@@ -17,6 +18,16 @@ function App() {
       <Dashboard sidebarOpen={sidebarOpen} onCloseSidebar={closeSidebar} />
       <Footer />
     </div>
+  );
+}
+
+function App() {
+  return (
+    <Routes>
+      <Route path="/login" element={<Login />} />
+      <Route path="/" element={<DashboardLayout />} />
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
   );
 }
 
