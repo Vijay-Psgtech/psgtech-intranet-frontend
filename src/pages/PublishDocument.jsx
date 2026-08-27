@@ -10,6 +10,7 @@ import {
   Sparkles,
   X,
 } from 'lucide-react';
+import { publishAPI } from '../services/api';
 
 const categories = ['Administration', 'Academic', 'Autonomous', 'Regulations', 'COE', 'CBCS', 'Students Union'];
 const allowedFileTypes = '.pdf,.doc,.docx,.jpg,.jpeg,.png,.html,.htm';
@@ -28,6 +29,8 @@ function PublishDocument() {
   const [file, setFile] = useState(null);
   const [errors, setErrors] = useState({});
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState('');
   const fileInputRef = useRef(null);
 
   const updateField = (event) => {
@@ -53,11 +56,24 @@ function PublishDocument() {
     return nextErrors;
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const nextErrors = validate();
     setErrors(nextErrors);
-    if (Object.keys(nextErrors).length === 0) setSubmitted(true);
+    setSubmitError('');
+    if (Object.keys(nextErrors).length > 0) return;
+    const payload = new FormData();
+    Object.entries(form).forEach(([key, value]) => { if (value) payload.append(key, value); });
+    if (file) payload.append('file', file);
+    try {
+      setIsSubmitting(true);
+      await publishAPI.create(payload);
+      setSubmitted(true);
+    } catch (error) {
+      setSubmitError(error.response?.data?.message || 'Unable to publish this resource. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const resetForm = () => {
@@ -65,6 +81,7 @@ function PublishDocument() {
     setFile(null);
     setErrors({});
     setSubmitted(false);
+    setSubmitError('');
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
@@ -121,8 +138,9 @@ function PublishDocument() {
             </div>
             {errors.resource && <p className="mt-2 text-xs font-medium text-red-600">{errors.resource}</p>}
 
-            {submitted && <div className="mt-5 flex items-center gap-3 rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-sm font-medium text-emerald-800"><span className="grid h-7 w-7 place-items-center rounded-full bg-emerald-600 text-white"><Check size={15} /></span>Resource validated and ready to publish.</div>}
-            <div className="mt-8 flex flex-wrap items-center justify-end gap-3"><button type="button" className="button-secondary" onClick={resetForm}><RotateCcw size={16} /> Reset</button><button type="submit" className="button-primary"><Send size={16} /> Publish resource</button></div>
+            {submitted && <div className="mt-5 flex items-center gap-3 rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-sm font-medium text-emerald-800"><span className="grid h-7 w-7 place-items-center rounded-full bg-emerald-600 text-white"><Check size={15} /></span>Resource published successfully.</div>}
+            {submitError && <p className="mt-5 rounded-xl border border-red-200 bg-red-50 p-3 text-sm font-medium text-red-700">{submitError}</p>}
+            <div className="mt-8 flex flex-wrap items-center justify-end gap-3"><button type="button" className="button-secondary" onClick={resetForm} disabled={isSubmitting}><RotateCcw size={16} /> Reset</button><button type="submit" className="button-primary" disabled={isSubmitting}>{isSubmitting ? 'Publishing...' : <><Send size={16} /> Publish resource</>}</button></div>
           </form>
         </div>
       </div>
