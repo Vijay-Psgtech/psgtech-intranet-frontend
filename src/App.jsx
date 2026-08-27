@@ -4,6 +4,7 @@ import Dashboard from './components/Dashboard';
 import Footer from './components/Footer';
 import Header from './components/Header';
 import Login from './pages/login';
+import PublishDocument from './pages/PublishDocument';
 
 function DashboardLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -25,6 +26,7 @@ function App() {
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
+      <Route path="/publish" element={<PublishDocument />} />
       <Route path="/" element={<DashboardLayout />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

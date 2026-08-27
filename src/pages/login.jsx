@@ -15,7 +15,7 @@ function Login() {
 
     useEffect(() => {
         if (user) {
-            navigate('/', { replace: true });
+            navigate('/publish', { replace: true });
         }
     }, [navigate, user]);
 
@@ -42,7 +42,7 @@ function Login() {
             });
             await authLogin(response.data?.user ?? response.data);
             resetFields();
-            navigate('/', { replace: true });
+            navigate('/publish', { replace: true });
         } catch (requestError) {
             setError(
                 requestError.response?.data?.message ||
