@@ -37,12 +37,16 @@ api.interceptors.response.use(
 );
 
 // -------------- API BASE ----------------------- //
-export const API_BASE = import.meta.env.VITE_API_URL.replace("/api", "");
+export const API_BASE = API_BASE_URL.replace(/\/api\/?$/, "");
 
 // ----------- Auth API ------------------ //
 export const authAPI = {
   login: (data) => api.post("/auth/login", data),
   getProfile: () => api.get("/auth/me"),
+};
+
+export const publishAPI = {
+  create: (formData) => api.post("/documents", formData),
 };
 
 export default api;
